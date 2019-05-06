@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0" xml:base="https://thedigitalgreek-com.github.io/rss.xml">
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0" xml:base="https://thedigitalgreek.com/rss.xml">
   <channel>
     <title>The Digital Greek</title>
-    <link>https://thedigitalgreek-com.github.io/rss.xml</link>
+    <link>https://thedigitalgreek.com/rss.xml</link>
     <description/>
     <language>en</language>
     
