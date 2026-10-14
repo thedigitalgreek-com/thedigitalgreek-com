@@ -3,6 +3,9 @@ import "../styles/global.css";
 import Logo from "../components/Logo.astro";
 import Email from "../components/Email.astro";
 import { getImage } from "astro:assets";
+// Same files global.css loads via @fontsource; preloaded so text renders in Geist from the first paint
+import geist from "@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url";
+import geistMono from "@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2?url";
 import { person, team, core } from "../data/site";
 
 interface Props {
@@ -84,6 +87,8 @@ const jsonLd = {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preload" href={geist} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={geistMono} as="font" type="font/woff2" crossorigin />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
@@ -111,6 +116,11 @@ const jsonLd = {
     </script>
   </head>
   <body>
+    <div class="sea" aria-hidden="true">
+      <div class="sea-dots"></div>
+      <div class="swell"><div class="sea-dots"></div></div>
+      <div class="swell swell-b"><div class="sea-dots"></div></div>
+    </div>
     <a
       href="#main"
       class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-10 focus:bg-bg focus:p-2"

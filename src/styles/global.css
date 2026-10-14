@@ -29,9 +29,12 @@
 
   /* Dot pattern background */
   --dot-gap: 32px;   /* spacing between dots */
-  --dot-k: 2%;       /* strength: lightness difference from the background */
+  --dot-k: 4%;       /* strength: lightness difference from the background */
   --dot-size: 1.5px; /* dot radius */
-  --dot: light-dark(hsl(var(--hue) 10% calc(95% - var(--dot-k) * 1.5)), hsl(var(--hue) 6% calc(7% + var(--dot-k))));
+  --dot: light-dark(hsl(var(--hue) 10% calc(95% - var(--dot-k) * 1.5)), hsl(var(--hue) 6% calc(7% + var(--dot-k) * 1.75)));
+  /* Wave crest (the .sea layer below): dots grow and brighten to these */
+  --dot-crest-size: 2.5px;
+  --dot-crest: light-dark(hsl(var(--hue) 10% calc(95% - var(--dot-k) * 2.5)), hsl(var(--hue) 6% calc(7% + var(--dot-k) * 3)));
 
   /* Layout */
   --margin: clamp(1rem, 3vw, 2.5rem); /* page side margin */
@@ -73,10 +76,6 @@
     -webkit-font-smoothing: antialiased;
   }
   body {
-    background-color: var(--bg);
-    background-image: radial-gradient(circle at center, var(--dot) var(--dot-size), transparent calc(var(--dot-size) + 0.5px));
-    background-size: var(--dot-gap) var(--dot-gap);
-    background-position: calc(var(--margin) - var(--dot-gap) / 2) calc(var(--dot-gap) / -2);
     color: var(--fg);
     font-family: var(--font-sans);
     font-size: var(--text-body);
@@ -90,4 +89,60 @@
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
   @view-transition { navigation: auto; }
+}
+
+/* ==========================================================================
+   Dot sea: the dot grid sits in a fixed layer behind the page, and slow
+   swells of brighter, larger dots roll across it.
+   Each swell is a soft diagonal band (a mask) over a layer of crest dots.
+   The band slides one way while the dots inside slide back by the same
+   amount, so the dots stay put and only the light moves. Only transforms
+   animate, so the browser never repaints: scrolling stays free.
+   ========================================================================== */
+.sea {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.sea-dots {
+  --c: var(--dot);
+  --r: var(--dot-size);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100lvh;
+  background-image: radial-gradient(circle at center, var(--c) var(--r), transparent calc(var(--r) + 0.5px));
+  background-size: var(--dot-gap) var(--dot-gap);
+  background-position: calc(var(--margin) - var(--dot-gap) / 2) calc(var(--dot-gap) / -2);
+}
+.swell {
+  --p: 1000px;   /* distance between crests */
+  --a: 105deg;   /* direction the swell travels */
+  --t: 18s;      /* time for one crest to pass a point */
+  --s: calc(var(--p) / sin(var(--a))); /* horizontal shift = one period, so the loop is seamless */
+  position: absolute;
+  top: 0;
+  left: calc(-1 * var(--s));
+  width: calc(100vw + var(--s));
+  height: 100lvh;
+  mask-image: repeating-linear-gradient(var(--a),
+    transparent 0, transparent calc(var(--p) * 0.3),
+    #000 calc(var(--p) * 0.5),
+    transparent calc(var(--p) * 0.7), transparent var(--p));
+  animation: swell var(--t) linear infinite;
+}
+.swell > .sea-dots {
+  --c: var(--dot-crest);
+  --r: var(--dot-crest-size);
+  left: var(--s);
+  animation: swell-back var(--t) linear infinite;
+}
+.swell-b { --p: 1400px; --a: 70deg; --t: 26s; opacity: 0.5; }
+@keyframes swell { to { transform: translateX(var(--s)); } }
+@keyframes swell-back { to { transform: translateX(calc(-1 * var(--s))); } }
+@media (prefers-reduced-motion: reduce) {
+  .swell { display: none; }
 }
