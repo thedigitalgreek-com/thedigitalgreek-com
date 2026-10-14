@@ -29,7 +29,7 @@ import { contact, core, toolkit, team } from "../data/site";
         </p>
       </div>
 
-      <ul class="mt-12 grid grid-cols-2 gap-6">
+      <ul class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2">
         {
           team.map((m) => (
             <li class="flex items-center gap-4">
@@ -39,7 +39,7 @@ import { contact, core, toolkit, team } from "../data/site";
                 width={256}
                 class="size-20 shrink-0 rounded-full object-cover grayscale md:size-32"
               />
-              <div>
+              <div class="min-w-0 wrap-break-word">
                 <p class="leading-snug">{m.name}</p>
                 <p class="font-mono text-meta text-muted">{m.role}</p>
               </div>
