@@ -1,26 +1,28 @@
 ---
-import '../styles/global.css';
-import Logo from '../components/Logo.astro';
-import Email from '../components/Email.astro';
-import { getImage } from 'astro:assets';
-import { person, team, core } from '../data/site';
+import "../styles/global.css";
+import Logo from "../components/Logo.astro";
+import Email from "../components/Email.astro";
+import { getImage } from "astro:assets";
+import { person, team, core } from "../data/site";
 
 interface Props {
   title?: string;
   description?: string;
-  image?: string;        // absolute URL or site path for og:image
+  image?: string; // absolute URL or site path for og:image
   imageAlt?: string;
-  schema?: object[];     // extra JSON-LD nodes for this page
+  schema?: object[]; // extra JSON-LD nodes for this page
 }
 const {
   title,
   description = `Berlin-based digital agency using open-source software, smart strategy and clean design to build fast, SEO-optimized websites and apps. Since ${person.since}.`,
-  image = '/og.png',
-  imageAlt = 'The Digital Greek logo',
+  image = "/og.png",
+  imageAlt = "The Digital Greek logo",
   schema = [],
 } = Astro.props;
 
-const fullTitle = title ? `${title} · The Digital Greek` : 'The Digital Greek · Web agency in Berlin';
+const fullTitle = title
+  ? `${title} · The Digital Greek`
+  : "The Digital Greek · Web agency in Berlin";
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL(image, Astro.site);
 
@@ -28,42 +30,55 @@ const ogImage = new URL(image, Astro.site);
 const site = Astro.site!.href;
 const people = await Promise.all(
   team.map(async (m) => ({
-    '@type': 'Person',
+    "@type": "Person",
     name: m.name,
     jobTitle: m.role,
-    image: new URL((await getImage({ src: m.photo, width: 400 })).src, site).href,
+    image: new URL((await getImage({ src: m.photo, width: 400 })).src, site)
+      .href,
     ...(m.sameAs && { sameAs: m.sameAs }),
   })),
 );
 const jsonLd = {
-  '@context': 'https://schema.org',
-  '@graph': [
+  "@context": "https://schema.org",
+  "@graph": [
     {
-      '@type': 'ProfessionalService',
-      '@id': `${site}#org`,
-      name: 'The Digital Greek',
+      "@type": "ProfessionalService",
+      "@id": `${site}#org`,
+      name: "The Digital Greek",
       url: site,
-      logo: new URL('/og.png', site).href,
-      image: new URL('/og.png', site).href,
-      description: 'Berlin-based digital agency building fast, SEO-optimized websites and apps with open-source software.',
+      logo: new URL("/og.png", site).href,
+      image: new URL("/og.png", site).href,
+      description:
+        "Berlin-based digital agency building fast, SEO-optimized websites and apps with open-source software.",
       foundingDate: String(person.since),
-      address: { '@type': 'PostalAddress', addressLocality: 'Berlin', addressCountry: 'DE' },
-      areaServed: 'DE',
-      knowsAbout: [...core, 'Web performance', 'Core Web Vitals', 'Accessibility', 'Structured data'],
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Berlin",
+        addressCountry: "DE",
+      },
+      areaServed: "DE",
+      knowsAbout: [
+        ...core,
+        "Web performance",
+        "Core Web Vitals",
+        "Accessibility",
+        "Structured data",
+      ],
       employee: people,
     },
     {
-      '@type': 'WebSite',
-      '@id': `${site}#website`,
+      "@type": "WebSite",
+      "@id": `${site}#website`,
       url: site,
-      name: 'The Digital Greek',
-      inLanguage: 'en',
-      publisher: { '@id': `${site}#org` },
+      name: "The Digital Greek",
+      inLanguage: "en",
+      publisher: { "@id": `${site}#org` },
     },
     ...schema,
   ],
 };
 ---
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -89,13 +104,18 @@ const jsonLd = {
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     <script is:inline>
       try {
-        const t = localStorage.getItem('theme');
-        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+        const t = localStorage.getItem("theme");
+        if (t === "light" || t === "dark")
+          document.documentElement.dataset.theme = t;
       } catch (e) {}
     </script>
   </head>
   <body>
-    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-10 focus:bg-bg focus:p-2">Skip to content</a>
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-10 focus:bg-bg focus:p-2"
+      >Skip to content</a
+    >
 
     <header class="wrap flex items-start justify-between py-8">
       <a href="/" aria-label="The Digital Greek, home" class="hover:text-fg">
@@ -113,36 +133,64 @@ const jsonLd = {
 
     <footer class="wrap mt-32 border-t border-line pt-24 pb-8">
       <Logo class="block h-auto w-full" decorative />
-      <div class="mt-8 flex flex-wrap justify-between gap-4 font-mono text-meta text-muted">
+      <div
+        class="mt-8 flex flex-wrap justify-between gap-4 font-mono text-meta text-muted"
+      >
         <span>© {new Date().getFullYear()} The Digital Greek · Berlin</span>
         <Email />
-        <button type="button" class="cursor-pointer hover:text-accent" data-theme-toggle>
+        <button
+          type="button"
+          class="cursor-pointer hover:text-accent"
+          data-theme-toggle
+        >
           Theme: <span data-theme-label>auto</span>
         </button>
       </div>
     </footer>
 
     <script is:inline>
-      document.querySelectorAll('[data-email]').forEach((a) => {
-        const e = [...atob(a.dataset.email)].reverse().join('');
-        a.href = 'mailto:' + e;
+      document.querySelectorAll("[data-email]").forEach((a) => {
+        const e = [...atob(a.dataset.email)].reverse().join("");
+        a.href = "mailto:" + e;
         a.textContent = e;
       });
     </script>
     <script is:inline>
       (() => {
         const root = document.documentElement;
-        const label = document.querySelector('[data-theme-label]');
+        const label = document.querySelector("[data-theme-label]");
         const current = () =>
-          root.dataset.theme || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+          root.dataset.theme ||
+          (matchMedia("(prefers-color-scheme: light)").matches
+            ? "light"
+            : "dark");
         label.textContent = current();
-        document.querySelector('[data-theme-toggle]').addEventListener('click', () => {
-          const next = current() === 'dark' ? 'light' : 'dark';
-          root.dataset.theme = next;
-          label.textContent = next;
-          try { localStorage.setItem('theme', next); } catch (e) {}
-        });
+        document
+          .querySelector("[data-theme-toggle]")
+          .addEventListener("click", () => {
+            const next = current() === "dark" ? "light" : "dark";
+            root.dataset.theme = next;
+            label.textContent = next;
+            try {
+              localStorage.setItem("theme", next);
+            } catch (e) {}
+          });
       })();
+    </script>
+
+    <!-- Google tag (gtag.js) -->
+    <script
+      is:inline
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-95RNTJK204"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-95RNTJK204");
     </script>
   </body>
 </html>
