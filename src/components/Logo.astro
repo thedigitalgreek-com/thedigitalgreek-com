@@ -1,0 +1,14 @@
+---
+// The Digital Greek wordmark, inlined so it takes the current text colour.
+import svg from '../assets/logo.svg?raw';
+
+interface Props {
+  class?: string;
+  decorative?: boolean; // hide from screen readers when repeated
+}
+const { class: className = '', decorative = false } = Astro.props;
+
+let markup = svg.replace('<svg ', `<svg class="${className}" `);
+if (decorative) markup = markup.replace(/ role="img" aria-label="[^"]*"/, ' aria-hidden="true"');
+---
+<Fragment set:html={markup} />

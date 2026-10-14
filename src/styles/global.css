@@ -1,0 +1,93 @@
+@import "tailwindcss";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+
+/* ==========================================================================
+   Design tokens — edit here.
+   Every colour is one warm hue with stepped lightness. light-dark() picks
+   the left value for the light theme and the right value for the dark one.
+   ========================================================================== */
+:root {
+  color-scheme: light dark; /* follows the visitor's system setting */
+
+  /* Hue of the neutrals (a whisper of warmth towards the accent) */
+  --hue: 20;
+
+  /* Accent hues — swap --accent-h to try the alternatives */
+  --orange-red: 14;
+  --orange: 20;
+  --orange-yellow: 27;
+  --accent-h: var(--orange);
+
+  /* Palette (light value, dark value) */
+  --bg:     light-dark(hsl(var(--hue) 10% 95%), hsl(var(--hue) 6% 7%));
+  --bg-2:   light-dark(hsl(var(--hue) 8% 91%),  hsl(var(--hue) 6% 10%));
+  --line:   light-dark(hsl(var(--hue) 5% 80%),  hsl(var(--hue) 5% 20%));
+  --muted:  light-dark(hsl(var(--hue) 4% 40%),  hsl(var(--hue) 5% 56%));
+  --fg:     light-dark(hsl(var(--hue) 6% 9%),   hsl(var(--hue) 10% 92%));
+  --accent: light-dark(hsl(var(--accent-h) 100% 40%), hsl(var(--accent-h) 100% 55%));
+
+  /* Dot pattern background */
+  --dot-gap: 32px;   /* spacing between dots */
+  --dot-k: 2%;       /* strength: lightness difference from the background */
+  --dot-size: 1.5px; /* dot radius */
+  --dot: light-dark(hsl(var(--hue) 10% calc(95% - var(--dot-k) * 1.5)), hsl(var(--hue) 6% calc(7% + var(--dot-k))));
+
+  /* Layout */
+  --margin: clamp(1rem, 3vw, 2.5rem); /* page side margin */
+}
+/* Manual override from the theme toggle */
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"]  { color-scheme: dark; }
+
+@theme inline {
+  --color-*: initial; /* only our palette exists */
+  --color-bg: var(--bg);
+  --color-bg-2: var(--bg-2);
+  --color-line: var(--line);
+  --color-muted: var(--muted);
+  --color-fg: var(--fg);
+  --color-accent: var(--accent);
+
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, monospace;
+
+  /* Type scale: three sizes on an 8px rhythm */
+  --text-meta: 0.8125rem;           /* 13px · labels, years, credits (mono) */
+  --text-meta--line-height: 1.5rem;
+  --text-body: 1.125rem;            /* 18px · paragraphs, the project list */
+  --text-body--line-height: 1.75rem;
+  --text-title: clamp(1.75rem, 1.2rem + 2.2vw, 3rem); /* page and section titles */
+  --text-title--line-height: 1.1;
+  --text-title--letter-spacing: -0.02em;
+  --text-title--font-weight: 500;
+}
+
+@utility wrap {
+  padding-inline: var(--margin);
+}
+
+@layer base {
+  html {
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    background-color: var(--bg);
+    background-image: radial-gradient(circle at center, var(--dot) var(--dot-size), transparent calc(var(--dot-size) + 0.5px));
+    background-size: var(--dot-gap) var(--dot-gap);
+    background-position: calc(var(--margin) - var(--dot-gap) / 2) calc(var(--dot-gap) / -2);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+  }
+  a { transition: color 0.15s; }
+  a:hover { color: var(--accent); }
+  :focus-visible { outline: 1px solid var(--accent); outline-offset: 4px; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+  @view-transition { navigation: auto; }
+}

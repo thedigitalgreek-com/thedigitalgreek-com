@@ -1,0 +1,34 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../layouts/Base.astro";
+import ProjectList from "../components/ProjectList.astro";
+import About from "../components/About.astro";
+import { person } from "../data/site";
+
+const projects = (await getCollection("projects")).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const years = projects
+  .map((p) => parseInt(p.data.year, 10))
+  .filter((y) => y > 1990);
+const first = Math.min(...years);
+---
+
+<Base>
+  <section class="wrap grid grid-cols-12 gap-x-6 pt-24 pb-24 md:pt-40 md:pb-32">
+    <h1 class="col-span-12 text-title md:col-span-7">
+      Fast, SEO-optimized websites. Built in Berlin since {person.since}.
+    </h1>
+    <p
+      class="col-span-12 mt-12 self-end font-mono text-meta text-muted md:col-span-3 md:col-start-10 md:mt-0"
+    >
+      Selected work<br />{first} — {new Date().getFullYear()}
+    </p>
+  </section>
+
+  <section id="work" class="wrap scroll-mt-8" aria-label="Selected work">
+    <ProjectList projects={projects} />
+  </section>
+
+  <About />
+</Base>

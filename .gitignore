@@ -1,0 +1,15 @@
+# build output
+dist/
+.astro/
+
+# dependencies
+node_modules/
+
+# private: logo sources, notes, backups, credentials
+.data/
+
+# local tooling and scratch
+.playwright-mcp/
+styletile/
+.env
+.DS_Store

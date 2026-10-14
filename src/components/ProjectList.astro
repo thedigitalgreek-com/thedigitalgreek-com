@@ -1,0 +1,82 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  projects: CollectionEntry<'projects'>[];
+}
+const { projects } = Astro.props;
+---
+<ul class="list border-b border-line">
+  {projects.map((p, i) => {
+    const cover = p.data.shots.find((s) => s.device === 'desktop') ?? p.data.shots[0];
+    const n = String(i + 1).padStart(2, '0');
+    const Row = p.data.placeholder ? 'div' : 'a';
+    return (
+      <li class:list={['relative', p.data.placeholder && 'text-muted']}>
+        <Row class="row group border-t border-line py-4" href={p.data.placeholder ? undefined : `/${p.id}`}>
+          <span class="n font-mono text-meta text-muted">{n}</span>
+          {cover ? (
+            <Image class="inline-thumb" src={cover.src} alt="" widths={[160, 320]} sizes="5rem" loading="lazy" />
+          ) : (
+            <span class="inline-thumb" />
+          )}
+          <span class="name">
+            <span class:list={[!p.data.placeholder && 'group-hover:text-accent']}>{p.data.title}</span>
+            {!p.data.placeholder && <span class="arrow ml-1.5 text-accent" aria-hidden="true">→</span>}
+          </span>
+          <span class="type text-muted">{p.data.type}</span>
+          <span class="year font-mono text-meta text-muted">{p.data.year}</span>
+        </Row>
+        {cover && (
+          <Image class="float-thumb" src={cover.src} alt="" widths={[480, 960]} sizes="15rem" loading="lazy" />
+        )}
+      </li>
+    );
+  })}
+</ul>
+
+<style>
+  /* Desktop with a mouse: 12-column rows, preview floats in on hover. */
+  .row {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 1.5rem;
+    align-items: baseline;
+  }
+  .n    { grid-column: 1 / span 1; }
+  .name { grid-column: 2 / span 5; }
+  .type { grid-column: 7 / span 4; }
+  .year { grid-column: 11 / span 2; text-align: right; }
+  .inline-thumb { display: none; }
+  .arrow { opacity: 0; }
+  .float-thumb {
+    position: absolute; right: 22%; top: 50%; translate: 0 -50%; z-index: 2;
+    width: 15rem; aspect-ratio: 16 / 10; object-fit: cover; object-position: top;
+    box-shadow: 0 0 0 1px var(--line);
+    opacity: 0; pointer-events: none;
+  }
+  @media (hover: hover) {
+    li:hover .arrow, li:hover .float-thumb { opacity: 1; }
+  }
+
+  /* Phones and touch screens: no hover, so each row shows its picture inline. */
+  @media (max-width: 767px), (hover: none) {
+    .row {
+      grid-template-columns: 5rem minmax(0, 1fr) auto;
+      grid-template-areas: "thumb name year" "thumb type year";
+      column-gap: 1rem;
+      align-items: start;
+    }
+    .n { display: none; }
+    .inline-thumb {
+      display: block; grid-area: thumb;
+      width: 5rem; aspect-ratio: 16 / 10; object-fit: cover; object-position: top;
+      background: var(--bg-2); box-shadow: 0 0 0 1px var(--line);
+    }
+    .name { grid-area: name; }
+    .type { grid-area: type; font-size: var(--text-meta); line-height: var(--text-meta--line-height); }
+    .year { grid-area: year; }
+    .float-thumb { display: none; }
+  }
+</style>

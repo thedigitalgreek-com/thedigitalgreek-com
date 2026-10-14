@@ -1,0 +1,15 @@
+---
+// Email link hidden from scrapers: the address is shipped reversed and
+// base64-encoded, and the script in Base.astro turns it back into a mailto link.
+import { email } from '../data/site';
+
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+
+const encoded = Buffer.from([...email].reverse().join('')).toString('base64');
+const [user, domain] = email.split('@');
+const fallback = `${user} at ${domain.replace(/\./g, ' dot ')}`;
+---
+<a class={className} data-email={encoded}>{fallback}</a>
