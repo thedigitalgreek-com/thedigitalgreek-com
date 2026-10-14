@@ -3,7 +3,7 @@ title: Olive Delivery
 order: 3
 type: Online shop
 year: "2025"   # TODO: year
-description: Olive products made in Greece and delivered personally to customers in Austria.
+description: Olive products made in Greece and delivered personally to customers in Austria. Built with Drupal and Commerce.
 client: Olive Delivery
 role: Design, development   # TODO: confirm
 url: https://olivedelivery.at

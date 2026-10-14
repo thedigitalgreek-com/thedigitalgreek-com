@@ -1,6 +1,6 @@
 ---
 title: news.de
-order: 1
+order: 5
 type: News portal
 year: "2020"   # TODO: start year
 description: "news.de covers more than the news: daily updates on politics, current affairs, sport, entertainment and celebrity gossip, plus in-depth background and the odd curious story, all about what's moving Germany."

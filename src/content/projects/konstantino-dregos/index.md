@@ -3,7 +3,7 @@ title: Konstantino Dregos
 order: 4
 type: Artist website
 year: "2018"
-description: Website for a Berlin-based artist whose work is shown in prominent galleries and museums.
+description: Website for a Berlin-based artist whose work is shown in prominent galleries and museums. Built with Drupal.
 client: Konstantino Dregos
 role: Design, development
 url: https://konstantinodregos.com

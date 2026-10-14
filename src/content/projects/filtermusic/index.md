@@ -1,9 +1,9 @@
 ---
 title: filtermusic
-order: 5
+order: 1
 type: Radio directory
 year: "2006"
-description: A directory of internet radio stations streaming mostly electronic music, with companion Android and iOS apps.
+description: A directory of internet radio stations streaming mostly electronic music, with companion Android and iOS apps. Built on Drupal and Astro.
 client: filtermusic
 role: Concept, development
 url: https://filtermusic.net
